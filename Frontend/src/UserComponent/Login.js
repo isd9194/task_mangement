@@ -2,7 +2,7 @@ import { useState } from "react";
 import FieldInput from "./FieldInput"
 import st from "./style.module.css"
 import { LoginVlidation } from "./Validation/LoginVlidation";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DOMAIN } from "./config";
 import { useDispatch } from "react-redux";
@@ -36,8 +36,9 @@ const MyLogin = (props) => {
                 let token = data.token ;
                 token = JSON.stringify(token);
                 localStorage.setItem("token" , token);
+
                 
-                data.data.role === "user" ?  dispatch(AfterLogin({Role :"user"})) : navigate("/login")
+                data.data.role === "user" ?  dispatch(AfterLogin({Role :"user" })) : navigate("/login")
                 data.data.role === "admin" ?  dispatch(AfterLogin({Role :"admin"})): navigate("/login")
                  if(data.data.role==="admin"){ return navigate("/Admin_dashboard")}
                 if(data.data.role==="user"){return navigate("/usertask")}
@@ -66,7 +67,8 @@ const MyLogin = (props) => {
                 <FieldInput
                     placeholder="Enter Email id"
                     id="email"
-                    
+                    value={request.email || ""}
+
                     err={response}
                     manage_request={manage_request}
                 />
@@ -77,6 +79,8 @@ const MyLogin = (props) => {
                     type="password"
                     err={response}
                     manage_request={manage_request}
+                    value={request.password || ""}
+
                 />
                 {/* <Link hrefLang="#">Forgot Password</Link> */}
                   <br></br>

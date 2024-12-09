@@ -1,14 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState ={Role : ""}
+const initialState ={Role : "" , token:""}
 
 const reducers =  {
     AfterLogin : (state , actions)=>{
         
-                 const { Role } = actions.payload;
+                 const { Role  ,token} = actions.payload;
                  state.Role = Role ;
+                 state.toke = token ; 
                 
     }
+
+   
 }
 
 const slice_obj = createSlice({

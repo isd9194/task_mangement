@@ -7,52 +7,45 @@ import { useState } from "react";
 import axios from "axios";
 import { DOMAIN } from "../UserComponent/config";
 import { Link } from "react-router-dom";
-// import { json } from "react-router-dom";
 
 
 const AddTask = (props) => {
-    const [request,setRequest] = useState({});
-    
+    const [request, setRequest] = useState({});
+
     const [response, setResponse] = useState()
     const manage_request = (obj) => {
         const { id, value } = obj;
 
-        setRequest((request)=>{
+        setRequest((request) => {
             request[id] = value;
-return {...request}
+            return { ...request }
 
         })
 
     };
-    
-       const token = JSON.parse(localStorage.getItem("token"));
-       
-    const add = async () => {
-       
-        try {
-           
-          
 
-             
-              const result = await axios.post(`${DOMAIN}task/add` ,request,{
+    const token = JSON.parse(localStorage.getItem("token"));
+
+    const add = async () => {
+
+        try {
+
+            const result = await axios.post(`${DOMAIN}task/add`, request, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-              });
+            });
             const { data } = result;
-            
-            
             alert("task add successfully")
-         
-            console.log("result",result)
+
+            console.log("result", result)
+            setRequest({})
             return;
         } catch (error) {
             alert("faild login please login again!");
-            return ;
+            return;
         }
     };
-
-
     return (
 
         <Container className="mt-5">
@@ -66,6 +59,8 @@ return {...request}
                             label="Title"
                             err={response}
                             manage_request={manage_request}
+                            value={request.title || ""}
+
                         />
 
 
@@ -76,6 +71,8 @@ return {...request}
                             type="date"
                             err={response}
                             manage_request={manage_request}
+                            value={request.due_date || ""}
+
                         />
 
                         <FieldInput
@@ -84,6 +81,8 @@ return {...request}
                             label="Description"
                             err={response}
                             manage_request={manage_request}
+                            value={request.description || ""}
+
                         />
 
 
@@ -107,7 +106,7 @@ return {...request}
                                 }
 
                             }}
-                            
+
                         />
                     </div>
                 </Col>

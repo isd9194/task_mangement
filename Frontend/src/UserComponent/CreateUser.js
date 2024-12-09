@@ -5,7 +5,7 @@ import { useState } from "react";
 import FieldInput from "./FieldInput";
 import { user_val } from "./Validation/FormValidation";    //joi validation file imaport
 import Axios from "axios";                                 // axios for connection node
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+// import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import st from "./style.module.css";                        // style shett import
 import { DOMAIN } from "./config";                          // api link import in congig file
@@ -41,7 +41,8 @@ const CreateUser = (props) => {
 
             const { data } = result;
             setResponse(data);
-            console.log(result);
+            alert("user created successfully")
+             setRequest({})
         } catch (error) {
 
             alert("faild login please login again!");
@@ -74,7 +75,7 @@ const CreateUser = (props) => {
     //============================================================
 
     if (response?.user_data) {
-        alert("user created successfully")
+        // alert("user created successfully")
         setResponse({})
     }
     if(!token)
@@ -103,6 +104,7 @@ const CreateUser = (props) => {
                             manage_request={manage_request}
                             err={Err}
                             label="Name"
+                            value={request.name || ""}
                         />
 
 
@@ -113,7 +115,7 @@ const CreateUser = (props) => {
                             type="email"
                             err={Err}
                             label="Email"
-
+                            value={request.email || ""}
                         />
 
                         <FieldInput
@@ -123,6 +125,7 @@ const CreateUser = (props) => {
                             type="password"
                             err={Err}
                             label="Password"
+                            value={request.password || ""}
                         />
 
                         <FieldInput
@@ -132,6 +135,7 @@ const CreateUser = (props) => {
                             type="password"
                             err={Err}
                             label="Retype Password"
+                            value={request.confirm_password || ""}
                         />
 
 

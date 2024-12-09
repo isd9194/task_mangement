@@ -1,6 +1,6 @@
 
 const FieldInput = (props) => {
-    const { placeholder, id, manage_request, err, type, label } = props;
+    const { placeholder, id, manage_request, err, type, label,value } = props;
 
     // Check if there is an error for this specific field
     const hasError = err && err[id];
@@ -8,11 +8,11 @@ const FieldInput = (props) => {
     return (
         <div style={{ position: "relative", width: "100%" }}>
             <label
-                htmlFor={id} // 'for' is replaced with 'htmlFor' in JSX
+                htmlFor={id} 
                 className="control-label required"
                 style={{
                     position: "absolute",
-                    top: "-10px", // Adjust as needed
+                    top: "-10px", 
                     left: "0px",
                     background: "white", // Add background to make it stand out
                     padding: "0 5px",
@@ -36,6 +36,7 @@ const FieldInput = (props) => {
                 }}
                 type={type ? type : "text"}
                 placeholder={placeholder}
+                value={ value ? value : ""}
                 required
                 onChange={(e) => {
                     const value = e.target.value;

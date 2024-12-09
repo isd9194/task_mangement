@@ -1,15 +1,15 @@
 
 
 
-import { useState } from "react";
-import { Col, Container, Nav, Navbar, Row } from "react-bootstrap";
-import "./style.css"; // Ensure the path is correct
-import { useSelector } from "react-redux";
+import {  Nav, Navbar } from "react-bootstrap";
+import "./style.css"; // 
+import { useDispatch, useSelector } from "react-redux";
+import { AfterLogin } from "../Redux_store/AfterLogin";
 
 const Header = () => {
-
+const dispatch = useDispatch();
   const {Role} = useSelector((state)=>state.A_login)
-  const [register, setRegister] = useState("Registration");
+  // const [register, setRegister] = useState("Registration");
   return (
     <div className="bg-light w-100">
       <Navbar expand="md" variant="light" className="container-fluid p-3">
@@ -27,7 +27,7 @@ const Header = () => {
 
           <Nav className="ms-auto">
             {Role  ? (
-              <Nav.Link className="link" href="./login">
+              <Nav.Link className="link" onClick={()=>{dispatch(AfterLogin({Role:""}))}} href="./login">
               LogOut
             </Nav.Link>
             ) : (

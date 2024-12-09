@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Admin_Dashboard = () => {
     // const navigate = useNavigate();
@@ -55,6 +55,24 @@ const Admin_Dashboard = () => {
                            
                             <Link className="btn btn-primary"
                                 to="/list" > Go to View Task list
+
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div className="col-md-4 mb-4">
+                    <div className="card shadow text-center">
+                        <div className="card-body">
+                            <h5 className="card-title">View Users</h5>
+                            <p className="card-text">
+                                View all users list
+                            </p>
+                          
+
+                            <Link className="btn btn-primary"
+                                to='/userlist' > Go to View users 
 
                             </Link>
                         </div>
