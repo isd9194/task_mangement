@@ -19,10 +19,8 @@ router.post("/add", async (req, res) => {
     const { _id: create_by } = get_token_data({ headers });
     try {
       data["create_by"] = create_by;
-      // let { due_date } = data;
-      // const [day, month, year] = due_date.split("-").map(Number);
-      // due_date = new Date(year, month - 1, day);
-      // data["due_date"] = due_date;
+      
+     
       const newTask = new Task_schema(data);
       const response = await newTask.save();
       res.send(response);
@@ -83,12 +81,12 @@ router.post("/status", async (req, res) => {
   const { headers, body: data } = req;
   const { _id, role } = get_token_data({ headers });
 
-  
+
   const assigned_to = _id; //for user
   const { task_id, status } = data;
   if (task_id?.length === 24) {
     try {
-      const condition = {   assigned_to , _id: task_id };
+      const condition = { assigned_to, _id: task_id };
       const value = { $set: { status } };
       const response = await Task_schema.updateOne(condition, value, {
         runValidators: true, //to check schema level validation
@@ -112,13 +110,13 @@ router.post("/assign", async (req, res) => {
   const { task_id, assigned_to } = data;
   if (task_id?.length === 24) {
     try {
-      
+
       const condition = { create_by, _id: task_id };
-     
+
       const value = { $set: { assigned_to } };
-      
+
       const response = await Task_schema.updateOne(condition, value, {});
-      
+
       if (response.modifiedCount) res.send({ success: true });
       else res.status(401).send({ success: false, response });
     } catch (error) {
@@ -127,56 +125,63 @@ router.post("/assign", async (req, res) => {
   } else res.status(401).send({ error: "pass valid task id" });
 });
 
-// router.post("/edit", async (req, res) => {
-//   const { headers, body: data } = req;
-//   const { _id: create_by, role } = get_token_data({ headers });
-//   if (role != "admin") {
-//     res.send({ error: "You can't assign task" });
-//     return;
-//   }
-//   const { task_id, title, description } = data;
-//   let { due_date } = data;
-//   const { error } = task_edit_val({ data });
-//   if (error) {
-//     res.send({ error });
-//   } else {
-//     const [day, month, year] = due_date.split("-").map(Number);
-//     due_date = new Date(year, month - 1, day);
-//     data["due_date"] = due_date;
+router.post("/update", async (req, res) => {
 
-//     try {
-//       const condition = { create_by, _id: task_id };
-//       const value = { $set: { title, description, due_date } };
-//       const response = await Task_schema.updateOne(condition, value, {});
-//       if (response.modifiedCount) res.send({ success: true });
-//       else res.send({ success: false, response });
-//     } catch (error) {
-//       res.send(error.message);
-//     }
-//   }
-  
-// });
+  const { headers, body: data } = req;
+  const { _id: create_by, role } = get_token_data({ headers });
+  if (role != "admin") {
+    res.status(401).send({ error: "You can't assign task" });
+    return;
+  }
+  const { task_id, title, description,due_date } = data;
+       
+ 
+  const { error } = task_edit_val({ data });
+  if (error) {
+
+    res.status(401).send({ error });
+  } else {
+
+    
+
+    try {
+
+      const condition = { create_by, _id: task_id };
+
+      const value = { $set: { title, description, due_date } };
+
+      const response = await Task_schema.updateOne(condition, value, {});
+      
+      if (response.modifiedCount) res.send({ success: true });
+      else res.send({ success: false, response });
+    } catch (error) {
+     
+      res.status(401).send(error.message);
+    }
+  }
+
+});
 
 
-router.post("/delete",  async (req, res) => {
+router.post("/delete", async (req, res) => {
   const { headers, body: data } = req;
   const { _id: create_by } = get_token_data({ headers });
 
   const { error } = del_val({ data });
   if (error) {
     res.status(401).send({ error });
-    return ; 
+    return;
   } else {
     const { task_id } = data;
-    
+
     try {
       const result = await Task_schema.deleteOne({ _id: task_id, create_by });
       if (result.deletedCount === 1) {
         res.send({ success: true });
-        return ; 
+        return;
       } else {
         res.status(401).send({ error: "No document found with this ID" });
-        return ; 
+        return;
       }
     } catch (error) {
       res.status(401).send(error.message);
@@ -184,14 +189,14 @@ router.post("/delete",  async (req, res) => {
   }
 });
 
-
+// only user can view there own task
 
 router.post("/userTask", async (req, res) => {
   const { headers, body: data } = req;
-  const { _id:  assigned_to} = get_token_data({ headers });
+  const { _id: assigned_to } = get_token_data({ headers });
   // console.log(assigned_to);
   if (assigned_to?.length === 24) {
-    const response = await Task_schema.find({assigned_to });
+    const response = await Task_schema.find({ assigned_to });
     // console.log("a")
     res.send(response);
   } else res.status(401).send({ error: "pass valid task id" });

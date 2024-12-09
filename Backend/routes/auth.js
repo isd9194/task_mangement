@@ -2,40 +2,36 @@ const jsonwebtoken = require("jsonwebtoken");
 const jwt_pass = process.env.JWT_SECRET;
 
 const check_token = (req, res, next) => {
-  const exclude_path = [
-    "/user/login",
-    "/user/registration",
-    "/user/forgot",
-    "/user/reset",
-  ];
-  const { headers, path } = req;
-  
-  if (!exclude_path.includes(path)) {
-   
-    const { authorization } = headers;
-    if (!authorization) res.status(401).send({ msg: "token missing" });
-     
-    const token = authorization?.split(" ");
+
+  const { headers } = req;
+  const { authorization } = headers;
+  const bearer_token = authorization?.split(" ")[1]
     
-    if(!token)return res.status(401).send({ msg: "invalid login" });
-    jsonwebtoken.verify(token[1], jwt_pass, (err, data) => {
-      if (err) res.status(401).send({ msg: "invalid login" });
-    });
+  if (!bearer_token) {return res.status(401).send("token missing") } else {
+    jsonwebtoken.verify(bearer_token, jwt_pass, (err) => {
+         if(err){
+         return res.status(401).send(err.message)
+         }else{
+          next();
+         }
+      })
   }
-  next();
-};
+}
 
 const create_token = ({ data }) => {
   return jsonwebtoken.sign(data, jwt_pass, {});
 };
 
 const get_token_data = ({ headers }) => {
-  
+
   const { authorization } = headers;
+  
   const token = authorization.split(" ");
+ 
   let data1;
   jsonwebtoken.verify(token[1], jwt_pass, (err, data) => {
     data1 = data;
+
   });
   return data1;
 };
